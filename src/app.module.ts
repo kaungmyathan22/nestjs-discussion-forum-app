@@ -27,7 +27,7 @@ import { QueueModule } from './queue/queue.module';
         JWT_SECRET: joi.string().required(),
         JWT_ACCESS_TOKEN_EXPIRES_IN: joi.number().required(),
         JWT_REFRESH_SECRET: joi.string().required(),
-        JWT_REFRESH_EXPIRES_IN: joi.number().required(),
+        JWT_REFRESH_TOKEN_EXPIRES_IN: joi.number().required(),
         REDIS_HOST: joi.string().required(),
         USER_TOKEN_CACHE_KEY: joi.string().required(),
         COOKIE_JWT_ACCESS_TOKEN_KEY: joi.string().required(),
