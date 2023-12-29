@@ -18,7 +18,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: (req: Request) => {
         const cookieToken =
-          req.cookies[configService.get(EnvironmentConstants.COOKIE_JWT_KEY)]; // Attempt to get token from cookies
+          req.cookies[
+            configService.get(EnvironmentConstants.COOKIE_JWT_ACCESS_TOKEN_KEY)
+          ]; // Attempt to get token from cookies
         const headerToken = ExtractJwt.fromAuthHeaderAsBearerToken()(req); // Attempt to get token from headers
         return headerToken || cookieToken;
       },
@@ -31,7 +33,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   async validate(req: Request, payload: JwtPayload) {
     const token =
       req.cookies[
-        this.configService.get(EnvironmentConstants.COOKIE_JWT_KEY)
+        this.configService.get(EnvironmentConstants.COOKIE_JWT_ACCESS_TOKEN_KEY)
       ] || ExtractJwt.fromAuthHeaderAsBearerToken()(req);
     const cacheKey = this.configService.get(
       EnvironmentConstants.USER_TOKEN_CACHE_KEY,

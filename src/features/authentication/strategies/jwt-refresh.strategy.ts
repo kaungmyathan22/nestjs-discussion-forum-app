@@ -21,7 +21,7 @@ export class JwtRefreshTokenStrategy extends PassportStrategy(
       jwtFromRequest: (req: Request) => {
         const cookieRefreshToken =
           req.cookies[
-            configService.get(EnvironmentConstants.COOKIE_REFRESH_JWT_KEY)
+            configService.get(EnvironmentConstants.COOKIE_REFRESH_TOKEN_KEY)
           ]; // Attempt to get token from cookies
         const headerRefreshToken = ExtractJwt.fromExtractors([
           (request: Request) => {
