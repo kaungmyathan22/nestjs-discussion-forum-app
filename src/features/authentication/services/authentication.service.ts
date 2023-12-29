@@ -20,11 +20,11 @@ import { UserEntity } from 'src/features/users/entities/user.entity';
 import { UsersService } from 'src/features/users/users.service';
 import { StringUtils } from 'src/utils/string';
 import { Repository } from 'typeorm';
-import { ForgotPasswordDTO } from './dto/fogot-password.dto';
-import { RegisterDTO } from './dto/register.dto';
-import { ResetPasswordDTO } from './dto/reset-password.dto';
-import { PasswordResetTokenEntity } from './entities/password-reset-token.entity';
-import { RefreshTokenService } from './refresh-token.service';
+import { ForgotPasswordDTO } from '../dto/fogot-password.dto';
+import { RegisterDTO } from '../dto/register.dto';
+import { ResetPasswordDTO } from '../dto/reset-password.dto';
+import { PasswordResetTokenEntity } from '../entities/password-reset-token.entity';
+import { RefreshTokenService } from '../services/token.service';
 
 @Injectable()
 export class AuthenticationService {

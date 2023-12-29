@@ -12,13 +12,13 @@ import {
 import { Request } from 'express';
 import { ChangePasswordDTO } from 'src/features/users/dto/change-password.dto';
 import { UserEntity } from 'src/features/users/entities/user.entity';
+import { ForgotPasswordDTO } from '../dto/fogot-password.dto';
+import { RegisterDTO } from '../dto/register.dto';
+import { ResetPasswordDTO } from '../dto/reset-password.dto';
+import JwtRefreshAuthenticationGuard from '../guards/jwt-refresh.guard';
+import JwtAuthenticationGuard from '../guards/jwt.guard';
+import { LocalAuthGuard } from '../guards/local.guard';
 import { AuthenticationService } from './authentication.service';
-import { ForgotPasswordDTO } from './dto/fogot-password.dto';
-import { RegisterDTO } from './dto/register.dto';
-import { ResetPasswordDTO } from './dto/reset-password.dto';
-import JwtRefreshAuthenticationGuard from './guards/jwt-refresh.guard';
-import JwtAuthenticationGuard from './guards/jwt.guard';
-import { LocalAuthGuard } from './guards/local.guard';
 
 @Controller('api/v1/authentication')
 export class AuthenticationController {
