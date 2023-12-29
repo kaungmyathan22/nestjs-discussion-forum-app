@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EmailService } from 'src/email/email.service';
+import { EmailService } from 'src/features/email/email.service';
 import { Repository } from 'typeorm';
 import { AuthenticateDTO } from './dto/authenticate.dto';
 import { CreateUserDto } from './dto/create-user.dto';
