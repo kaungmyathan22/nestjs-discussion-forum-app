@@ -59,7 +59,7 @@ export class TokenService {
       { id: user.id },
       {
         secret: this.configService.get(EnvironmentConstants.JWT_REFRESH_SECRET),
-        expiresIn: this.configService.get(
+        expiresIn: +this.configService.get(
           EnvironmentConstants.JWT_REFRESH_TOKEN_EXPIRES_IN,
         ),
       },
@@ -69,9 +69,12 @@ export class TokenService {
   }
 
   getAccessToken(user: UserEntity) {
-    const access_token = this.jwtService.sign({ id: user.id });
     const jwt_access_expiration_time = this.configService.get<number>(
       EnvironmentConstants.JWT_ACCESS_TOKEN_EXPIRES_IN,
+    );
+    const access_token = this.jwtService.sign(
+      { id: user.id },
+      { expiresIn: jwt_access_expiration_time },
     );
     const cacheKey = this.configService.get(
       EnvironmentConstants.USER_TOKEN_CACHE_KEY,
