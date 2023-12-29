@@ -5,6 +5,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Patch,
   Post,
   Req,
   UseGuards,
@@ -67,7 +68,7 @@ export class AuthenticationController {
 
   @UseGuards(JwtAuthenticationGuard)
   @HttpCode(HttpStatus.OK)
-  @Post('logout')
+  @Get('logout')
   async logOut(@Req() req: Request) {
     req.res.setHeader('Set-Cookie', this.cookieService.getCookieForLogOut());
     this.authenticationService.logout(req.user as UserEntity);
@@ -90,7 +91,7 @@ export class AuthenticationController {
 
   @UseGuards(JwtAuthenticationGuard)
   @HttpCode(HttpStatus.OK)
-  @Post('change-password')
+  @Patch('change-password')
   async changePassword(
     @Req() req: Request,
     @Body() payload: ChangePasswordDTO,
