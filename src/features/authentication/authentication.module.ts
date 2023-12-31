@@ -1,3 +1,5 @@
+import { BullAdapter } from '@bull-board/api/bullAdapter';
+import { BullBoardModule } from '@bull-board/nestjs';
 import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -8,6 +10,7 @@ import { QueueConstants } from 'src/common/constants/queue.constants';
 import { EmailModule } from 'src/features/email/email.module';
 import { UsersModule } from 'src/features/users/users.module';
 import { AuthenticationController } from './controllers/authentication.controller';
+import { EmailVerificationTokenEntity } from './entities/email-verification-token.entity';
 import { PasswordResetTokenEntity } from './entities/password-reset-token.entity';
 import { RefreshTokenEntity } from './entities/refresh-token.entity';
 import { AuthEmailProcessor } from './processor/email.processor';
@@ -32,9 +35,17 @@ import { LocalStrategy } from './strategies/local.strategy';
         signOptions: { expiresIn: configService.get('JWT_EXPIRES_IN') },
       }),
     }),
-    TypeOrmModule.forFeature([RefreshTokenEntity, PasswordResetTokenEntity]),
+    TypeOrmModule.forFeature([
+      RefreshTokenEntity,
+      PasswordResetTokenEntity,
+      EmailVerificationTokenEntity,
+    ]),
     BullModule.registerQueue({
       name: QueueConstants.emailQueue,
+    }),
+    BullBoardModule.forFeature({
+      name: QueueConstants.emailQueue,
+      adapter: BullAdapter,
     }),
   ],
   controllers: [AuthenticationController],
