@@ -4,6 +4,7 @@ import {
   BadRequestException,
   Inject,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -13,8 +14,8 @@ import * as bcrypt from 'bcryptjs';
 import { Queue } from 'bull';
 import { Cache } from 'cache-manager';
 import { EnvironmentConstants } from 'src/common/constants/environment.constants';
+import { ProcessorType } from 'src/common/constants/process.constants';
 import { QueueConstants } from 'src/common/constants/queue.constants';
-import { EmailService } from 'src/features/email/email.service';
 import { ChangePasswordDTO } from 'src/features/users/dto/change-password.dto';
 import { UserEntity } from 'src/features/users/entities/user.entity';
 import { UsersService } from 'src/features/users/users.service';
@@ -22,19 +23,17 @@ import { StringUtils } from 'src/utils/string';
 import { Repository } from 'typeorm';
 import { ForgotPasswordDTO } from '../dto/fogot-password.dto';
 import { RegisterDTO } from '../dto/register.dto';
+import { ResendVerificationEmailDTO } from '../dto/resend-verification-email.dto';
 import { ResetPasswordDTO } from '../dto/reset-password.dto';
 import { PasswordResetTokenEntity } from '../entities/password-reset-token.entity';
-import { TokenService } from '../services/token.service';
 
 @Injectable()
 export class AuthenticationService {
   constructor(
-    private emailService: EmailService,
     private userService: UsersService,
     private jwtService: JwtService,
     private configService: ConfigService,
     @Inject(CACHE_MANAGER) private cacheService: Cache,
-    private refreshTokenService: TokenService,
     @InjectQueue(QueueConstants.emailQueue) private emailQueue: Queue,
     @InjectRepository(PasswordResetTokenEntity)
     private passwordResetTokenRepository: Repository<PasswordResetTokenEntity>,
@@ -47,8 +46,10 @@ export class AuthenticationService {
     });
   }
 
-  register(payload: RegisterDTO) {
-    return this.userService.create(payload);
+  async register(payload: RegisterDTO) {
+    const user = await this.userService.create(payload);
+    this.emailQueue.add(ProcessorType.VerificationEmail, user);
+    return user;
   }
 
   logout(user: UserEntity) {
@@ -126,14 +127,14 @@ export class AuthenticationService {
       );
       await Promise.all([
         this.passwordResetTokenRepository.save(resetTokenInstance),
-        this.emailService.sendEmail({
-          to: 'hello@gmail.com',
-          template: 'forgot-password',
-          subject: 'Password Reset Link',
-          context: {
-            resetLink: `${frontendURL}/?token=${token}`,
-          },
-        }),
+        // this.emailService.sendEmail({
+        //   to: 'hello@gmail.com',
+        //   template: 'forgot-password',
+        //   subject: 'Password Reset Link',
+        //   context: {
+        //     resetLink: `${frontendURL}/?token=${token}`,
+        //   },
+        // }),
       ]);
     }
     return { success: true };
@@ -170,5 +171,18 @@ export class AuthenticationService {
       console.log(error);
       throw new UnauthorizedException('Passwrod reset link expired');
     }
+  }
+
+  async resendVerificationEmail({ email }: ResendVerificationEmailDTO) {
+    const user = await this.userService.findByEmail(email);
+    if (!user) {
+      throw new NotFoundException(
+        'User with given email not found in the database.',
+      );
+    }
+    this.emailQueue.add(ProcessorType.VerificationEmail, user);
+    return {
+      message: 'A verification email has sent to your email address.',
+    };
   }
 }
