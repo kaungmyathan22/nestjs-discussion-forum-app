@@ -24,6 +24,9 @@
     "migration:revert": "npm run typeorm -- migration:revert"
   },
   "dependencies": {
+    "@bull-board/api": "^5.10.2",
+    "@bull-board/express": "^5.10.2",
+    "@bull-board/nestjs": "^5.10.2",
     "@nestjs-modules/mailer": "^1.9.1",
     "@nestjs/bull": "^10.0.1",
     "@nestjs/cache-manager": "^2.1.0",
