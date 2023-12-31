@@ -8,6 +8,7 @@ import { Cache } from 'cache-manager';
 import { EnvironmentConstants } from 'src/common/constants/environment.constants';
 import { UserEntity } from 'src/features/users/entities/user.entity';
 import { MoreThanOrEqual, Repository } from 'typeorm';
+import { EmailVerificationTokenEntity } from '../entities/email-verification-token.entity';
 import { RefreshTokenEntity } from '../entities/refresh-token.entity';
 
 @Injectable()
@@ -16,6 +17,8 @@ export class TokenService {
     private readonly jwtService: JwtService,
     @InjectRepository(RefreshTokenEntity)
     private refreshTokenRepository: Repository<RefreshTokenEntity>,
+    @InjectRepository(EmailVerificationTokenEntity)
+    private emailVerificationTokenRepository: Repository<EmailVerificationTokenEntity>,
     private configService: ConfigService,
     @Inject(CACHE_MANAGER) private cacheService: Cache,
   ) {}
@@ -34,6 +37,30 @@ export class TokenService {
         user,
         refreshTokenHash,
         expirationTime,
+      },
+      ['user'],
+    );
+    return tokenInstance;
+  }
+
+  async upsertEmailVerificationToken(
+    verification_token: string,
+    user: UserEntity,
+  ) {
+    const expirationTime = new Date();
+    const tokenExpirationTimeInSecodns = +this.configService.get(
+      EnvironmentConstants.EMAIL_VERIFICATION_TOKEN_EXPIRES_IN,
+    );
+    expirationTime.setSeconds(
+      expirationTime.getSeconds() + tokenExpirationTimeInSecodns,
+    );
+
+    const refreshTokenHash = await bcrypt.hash(verification_token, 10);
+    const tokenInstance = await this.emailVerificationTokenRepository.upsert(
+      {
+        user,
+        token_hash: refreshTokenHash,
+        expiresAt: expirationTime,
       },
       ['user'],
     );
@@ -83,5 +110,21 @@ export class TokenService {
       ttl: jwt_access_expiration_time,
     } as any);
     return access_token;
+  }
+
+  async getEmailVerificationToken(user: UserEntity) {
+    const token = this.jwtService.sign(
+      { email: user.email },
+      {
+        secret: this.configService.get(
+          EnvironmentConstants.EMAIL_VERIFICATION_TOKEN_SECRET,
+        ),
+        expiresIn: +this.configService.get(
+          EnvironmentConstants.EMAIL_VERIFICATION_TOKEN_EXPIRES_IN,
+        ),
+      },
+    );
+    await this.upsertEmailVerificationToken(token, user);
+    return token;
   }
 }
