@@ -13,6 +13,7 @@ import { EmailModule } from './features/email/email.module';
 import { QueueModule } from './queue/queue.module';
 import { QuestionModule } from './features/question/question.module';
 import { ArticlesModule } from './features/articles/articles.module';
+import { SearchModule } from './features/search/search.module';
 
 @Module({
   imports: [
@@ -61,6 +62,7 @@ import { ArticlesModule } from './features/articles/articles.module';
     QueueModule,
     QuestionModule,
     ArticlesModule,
+    SearchModule,
   ],
   controllers: [AppController],
   providers: [AppService],
