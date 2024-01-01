@@ -11,6 +11,7 @@ import { UsersModule } from './features//users/users.module';
 import { AuthenticationModule } from './features/authentication/authentication.module';
 import { EmailModule } from './features/email/email.module';
 import { QueueModule } from './queue/queue.module';
+import { QuestionModule } from './features/question/question.module';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { QueueModule } from './queue/queue.module';
     }),
     EmailModule,
     QueueModule,
+    QuestionModule,
   ],
   controllers: [AppController],
   providers: [AppService],
