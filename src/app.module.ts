@@ -11,7 +11,7 @@ import { UsersModule } from './features//users/users.module';
 import { AuthenticationModule } from './features/authentication/authentication.module';
 import { EmailModule } from './features/email/email.module';
 import { QueueModule } from './queue/queue.module';
-import { QuestionModule } from './features/question/question.module';
+import { QuestionModule } from './features/questions/question.module';
 import { ArticlesModule } from './features/articles/articles.module';
 import { SearchModule } from './features/search/search.module';
 
