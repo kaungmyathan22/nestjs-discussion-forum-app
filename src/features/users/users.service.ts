@@ -95,4 +95,9 @@ export class UsersService {
     user.password = newPassword;
     return this.userRepository.save(user);
   }
+
+  async setUserVerified(user: UserEntity) {
+    user.verified = true;
+    return this.userRepository.save(user);
+  }
 }

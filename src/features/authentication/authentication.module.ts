@@ -18,6 +18,7 @@ import { AuthenticationService } from './services/authentication.service';
 import { CookieService } from './services/cookie.service';
 import { TokenService } from './services/token.service';
 import { JwtRefreshTokenStrategy } from './strategies/jwt-refresh.strategy';
+import { JwtVerifyEmailStrategy } from './strategies/jwt-verify-email.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
 
@@ -54,6 +55,7 @@ import { LocalStrategy } from './strategies/local.strategy';
     LocalStrategy,
     JwtStrategy,
     JwtRefreshTokenStrategy,
+    JwtVerifyEmailStrategy,
     TokenService,
     CookieService,
     AuthEmailProcessor,

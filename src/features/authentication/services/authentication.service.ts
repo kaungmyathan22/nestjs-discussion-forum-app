@@ -26,12 +26,14 @@ import { RegisterDTO } from '../dto/register.dto';
 import { ResendVerificationEmailDTO } from '../dto/resend-verification-email.dto';
 import { ResetPasswordDTO } from '../dto/reset-password.dto';
 import { PasswordResetTokenEntity } from '../entities/password-reset-token.entity';
+import { TokenService } from './token.service';
 
 @Injectable()
 export class AuthenticationService {
   constructor(
     private userService: UsersService,
     private jwtService: JwtService,
+    private tokenService: TokenService,
     private configService: ConfigService,
     @Inject(CACHE_MANAGER) private cacheService: Cache,
     @InjectQueue(QueueConstants.emailQueue) private emailQueue: Queue,
@@ -184,5 +186,13 @@ export class AuthenticationService {
     return {
       message: 'A verification email has sent to your email address.',
     };
+  }
+
+  async verifyEmail(user: UserEntity) {
+    await Promise.all([
+      this.userService.setUserVerified(user),
+      this.tokenService.removeEmailToken(user),
+    ]);
+    return { message: 'Email verification success.' };
   }
 }

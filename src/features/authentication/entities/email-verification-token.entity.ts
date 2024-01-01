@@ -1,3 +1,4 @@
+import * as bcrypt from 'bcryptjs';
 import { UserEntity } from 'src/features/users/entities/user.entity';
 import {
   Column,
@@ -14,8 +15,15 @@ export class EmailVerificationTokenEntity {
   @OneToOne(() => UserEntity, { onDelete: 'CASCADE' })
   @JoinColumn()
   user: UserEntity;
-  @Column()
+  @Column({ nullable: true })
   token_hash: string;
-  @Column({ type: 'timestamp with time zone' })
+  @Column({ type: 'timestamp with time zone', nullable: true })
   expiresAt: Date;
+  async isTokenMatch(plainText: string) {
+    try {
+      return bcrypt.compare(plainText, this.token_hash);
+    } catch (error) {
+      return false;
+    }
+  }
 }

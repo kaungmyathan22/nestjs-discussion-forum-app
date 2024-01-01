@@ -43,29 +43,6 @@ export class TokenService {
     return tokenInstance;
   }
 
-  async upsertEmailVerificationToken(
-    verification_token: string,
-    user: UserEntity,
-  ) {
-    const expirationTime = new Date();
-    const tokenExpirationTimeInSecodns = +this.configService.get(
-      EnvironmentConstants.EMAIL_VERIFICATION_TOKEN_EXPIRES_IN,
-    );
-    expirationTime.setSeconds(
-      expirationTime.getSeconds() + tokenExpirationTimeInSecodns,
-    );
-
-    const refreshTokenHash = await bcrypt.hash(verification_token, 10);
-    const tokenInstance = await this.emailVerificationTokenRepository.upsert(
-      {
-        user,
-        token_hash: refreshTokenHash,
-        expiresAt: expirationTime,
-      },
-      ['user'],
-    );
-    return tokenInstance;
-  }
   remove(user: UserEntity) {
     return this.refreshTokenRepository.delete({ user: { id: user.id } });
   }
@@ -111,6 +88,45 @@ export class TokenService {
     } as any);
     return access_token;
   }
+  //#region email token
+
+  async upsertEmailVerificationToken(
+    verification_token: string,
+    user: UserEntity,
+  ) {
+    const expirationTime = new Date();
+    const tokenExpirationTimeInSecodns = +this.configService.get(
+      EnvironmentConstants.EMAIL_VERIFICATION_TOKEN_EXPIRES_IN,
+    );
+    expirationTime.setSeconds(
+      expirationTime.getSeconds() + tokenExpirationTimeInSecodns,
+    );
+
+    const refreshTokenHash = await bcrypt.hash(verification_token, 10);
+    const tokenInstance = await this.emailVerificationTokenRepository.upsert(
+      {
+        user,
+        token_hash: refreshTokenHash,
+        expiresAt: expirationTime,
+      },
+      ['user'],
+    );
+    return tokenInstance;
+  }
+
+  async isEmailVerificationTokenValid(
+    userId: number,
+    token: string,
+  ): Promise<boolean> {
+    const currentTime = new Date();
+    const tokenFromDB = await this.emailVerificationTokenRepository.findOne({
+      where: {
+        user: { id: userId },
+        expiresAt: MoreThanOrEqual(currentTime),
+      },
+    });
+    return tokenFromDB && tokenFromDB.isTokenMatch(token);
+  }
 
   async getEmailVerificationToken(user: UserEntity) {
     const token = this.jwtService.sign(
@@ -127,4 +143,12 @@ export class TokenService {
     await this.upsertEmailVerificationToken(token, user);
     return token;
   }
+
+  async removeEmailToken(user: UserEntity) {
+    return this.emailVerificationTokenRepository.update(
+      { user: { id: user.id } },
+      { expiresAt: null, token_hash: null },
+    );
+  }
+  //#endregion
 }

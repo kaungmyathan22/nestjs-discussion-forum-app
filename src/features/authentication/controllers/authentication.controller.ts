@@ -11,12 +11,14 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Request } from 'express';
+import { CurrentUser } from 'src/common/decorators/current-user';
 import { ChangePasswordDTO } from 'src/features/users/dto/change-password.dto';
 import { UserEntity } from 'src/features/users/entities/user.entity';
 import { ForgotPasswordDTO } from '../dto/fogot-password.dto';
 import { RegisterDTO } from '../dto/register.dto';
 import { ResendVerificationEmailDTO } from '../dto/resend-verification-email.dto';
 import { ResetPasswordDTO } from '../dto/reset-password.dto';
+import JwtEmailVerificationGuard from '../guards/jwt-email-verification.guard';
 import JwtRefreshAuthenticationGuard from '../guards/jwt-refresh.guard';
 import JwtAuthenticationGuard from '../guards/jwt.guard';
 import { LocalAuthGuard } from '../guards/local.guard';
@@ -116,10 +118,12 @@ export class AuthenticationController {
     return this.authenticationService.resetPassword(payload);
   }
 
+  @UseGuards(JwtEmailVerificationGuard)
   @Post('verify-email')
   @HttpCode(HttpStatus.OK)
-  async veifyEmail(@Body() payload: ResetPasswordDTO) {
-    return this.authenticationService.resetPassword(payload);
+  async veifyEmail(@CurrentUser() user: UserEntity) {
+    console.log('hola');
+    return this.authenticationService.verifyEmail(user);
   }
 
   @Post('resend-verification-email')
