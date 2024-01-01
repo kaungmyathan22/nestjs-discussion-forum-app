@@ -12,6 +12,7 @@ import { AuthenticationModule } from './features/authentication/authentication.m
 import { EmailModule } from './features/email/email.module';
 import { QueueModule } from './queue/queue.module';
 import { QuestionModule } from './features/question/question.module';
+import { ArticlesModule } from './features/articles/articles.module';
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { QuestionModule } from './features/question/question.module';
     EmailModule,
     QueueModule,
     QuestionModule,
+    ArticlesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
