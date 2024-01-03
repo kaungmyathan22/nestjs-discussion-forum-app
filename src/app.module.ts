@@ -36,6 +36,9 @@ import { SearchModule } from './features/search/search.module';
         COOKIE_JWT_ACCESS_TOKEN_KEY: joi.string().required(),
         COOKIE_REFRESH_JWT_KEY: joi.string().required(),
         REDIS_PORT: joi.number().required(),
+        ELASTICSEARCH_NODE: joi.string().required(),
+        ELASTICSEARCH_USERNAME: joi.string().required(),
+        ELASTICSEARCH_PASSWORD: joi.string().required(),
       }),
     }),
     UsersModule,
@@ -46,11 +49,6 @@ import { SearchModule } from './features/search/search.module';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        console.log({
-          store: 'redis',
-          host: configService.get('REDIS_HOST'),
-          port: configService.get('REDIS_PORT'),
-        });
         return {
           store: redisStore,
           host: configService.get('REDIS_HOST'),

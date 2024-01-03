@@ -1,1 +1,3 @@
-export class CreateArticleDto {}
+export class CreateArticleDto {
+  content: string;
+}
