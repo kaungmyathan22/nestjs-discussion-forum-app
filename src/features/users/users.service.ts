@@ -98,7 +98,6 @@ export class UsersService {
   }
 
   async setUserVerified(user: UserEntity) {
-    user.verified = true;
-    return this.userRepository.save(user);
+    return await this.userRepository.update(user.id, { verified: true });
   }
 }
