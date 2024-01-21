@@ -8,12 +8,12 @@ import { AppService } from './app.service';
 import { CookieMiddleware } from './common/middlewares/cookie.middleware';
 import { DatabaseModule } from './database/database.module';
 import { UsersModule } from './features//users/users.module';
+import { ArticlesModule } from './features/articles/articles.module';
 import { AuthenticationModule } from './features/authentication/authentication.module';
 import { EmailModule } from './features/email/email.module';
-import { QueueModule } from './queue/queue.module';
 import { QuestionModule } from './features/questions/question.module';
-import { ArticlesModule } from './features/articles/articles.module';
 import { SearchModule } from './features/search/search.module';
+import { QueueModule } from './queue/queue.module';
 
 @Module({
   imports: [
@@ -59,8 +59,8 @@ import { SearchModule } from './features/search/search.module';
     EmailModule,
     QueueModule,
     QuestionModule,
-    ArticlesModule,
     SearchModule,
+    ArticlesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
