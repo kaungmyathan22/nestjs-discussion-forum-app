@@ -15,11 +15,13 @@ export class ArticlesService {
     private readonly articleSearchService: ArticleSearchService,
   ) {}
   async create(user: UserEntity, createArticleDto: CreateArticleDto) {
-    const newArticle = await this.articleRepository.create({
+    const newArticle = this.articleRepository.create({
       ...createArticleDto,
       author: user,
     });
-    await this.articleSearchService.indexArticle(newArticle);
+    await this.articleRepository.save(newArticle);
+    // await this.articleSearchService.indexArticle(newArticle);
+    return newArticle;
   }
 
   findAll() {
