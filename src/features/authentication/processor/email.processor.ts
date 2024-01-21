@@ -8,6 +8,12 @@ import { EmailService } from 'src/features/email/email.service';
 import { UserEntity } from 'src/features/users/entities/user.entity';
 import { TokenService } from '../services/token.service';
 
+interface IForgotPasswordData {
+  frontendURL: string;
+  token: string;
+  email: string;
+}
+
 @Processor(QueueConstants.emailQueue)
 export class AuthEmailProcessor {
   constructor(
@@ -16,12 +22,17 @@ export class AuthEmailProcessor {
     private readonly configService: ConfigService,
   ) {}
   @Process(ProcessorType.ForgotPassword)
-  async handleSendForgotPasswordEmail(job: Job) {
-    console.log('====================================');
-    console.log(job);
-    console.log('Hola');
-    console.log('====================================');
-    job.finished();
+  async handleSendForgotPasswordEmail(job: Job<IForgotPasswordData>) {
+    const { frontendURL, token, email } = job.data;
+    this.emailService.sendEmail({
+      to: email,
+      template: 'forgot-password',
+      subject: 'Password Reset Link',
+      context: {
+        resetLink: `${frontendURL}/?token=${token}`,
+      },
+    }),
+      job.finished();
   }
 
   @Process(ProcessorType.VerificationEmail)
