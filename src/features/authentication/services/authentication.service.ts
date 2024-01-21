@@ -127,16 +127,13 @@ export class AuthenticationService {
       const frontendURL = this.configService.get(
         EnvironmentConstants.FRONTNED_URL,
       );
+      this.emailQueue.add(ProcessorType.ForgotPassword, {
+        frontendURL,
+        token,
+        email: user.email,
+      });
       await Promise.all([
         this.passwordResetTokenRepository.save(resetTokenInstance),
-        // this.emailService.sendEmail({
-        //   to: 'hello@gmail.com',
-        //   template: 'forgot-password',
-        //   subject: 'Password Reset Link',
-        //   context: {
-        //     resetLink: `${frontendURL}/?token=${token}`,
-        //   },
-        // }),
       ]);
     }
     return { success: true };
