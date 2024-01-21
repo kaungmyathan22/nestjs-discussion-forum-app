@@ -1,5 +1,5 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Cache } from 'cache-manager';
@@ -42,7 +42,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       `${cacheKey}:${payload.id}`,
     );
     if (token_from_cache && token_from_cache === token) {
-      return this.userService.findOne(payload.id);
+      try {
+        console.log('Hola');
+        return await this.userService.findOne(payload.id);
+      } catch (error) {
+        throw new UnauthorizedException('Invalid authorization token.');
+      }
     }
     return false;
   }
