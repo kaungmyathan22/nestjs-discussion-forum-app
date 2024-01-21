@@ -77,7 +77,8 @@ export class UsersService {
 
   async authenticate(payload: AuthenticateDTO) {
     const user = await this.findByEmail(payload.email);
-    if (user && (await user.isPasswordMatch(payload.password))) {
+    const isPasswordMatch = await user.isPasswordMatch(payload.password);
+    if (user && isPasswordMatch) {
       return user;
     }
     throw new HttpException(
