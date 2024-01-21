@@ -3,10 +3,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { TagEntity } from './tags.entity';
 
 @Entity()
 export class ArticleEntity {
@@ -31,4 +34,7 @@ export class ArticleEntity {
     onUpdate: 'CURRENT_TIMESTAMP',
   })
   updatedAt: Date;
+  @ManyToMany(() => TagEntity, { cascade: true })
+  @JoinTable()
+  tags: TagEntity[];
 }
