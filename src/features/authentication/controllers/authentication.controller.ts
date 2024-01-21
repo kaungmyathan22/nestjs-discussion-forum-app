@@ -122,7 +122,6 @@ export class AuthenticationController {
   @Post('verify-email')
   @HttpCode(HttpStatus.OK)
   async veifyEmail(@CurrentUser() user: UserEntity) {
-    console.log('hola');
     return this.authenticationService.verifyEmail(user);
   }
 

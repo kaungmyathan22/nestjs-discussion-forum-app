@@ -43,7 +43,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     );
     if (token_from_cache && token_from_cache === token) {
       try {
-        console.log('Hola');
         return await this.userService.findOne(payload.id);
       } catch (error) {
         throw new UnauthorizedException('Invalid authorization token.');

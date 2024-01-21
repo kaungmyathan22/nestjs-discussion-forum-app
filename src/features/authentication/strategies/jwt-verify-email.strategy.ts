@@ -33,7 +33,6 @@ export class JwtVerifyEmailStrategy extends PassportStrategy(
 
   async validate(req: Request, payload: JwtPayload) {
     const verificationToken = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
-    console.log(verificationToken);
     const isTokenValid = await this.tokenService.isEmailVerificationTokenValid(
       payload.id,
       verificationToken,
