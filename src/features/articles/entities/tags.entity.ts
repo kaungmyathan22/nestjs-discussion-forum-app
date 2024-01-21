@@ -15,6 +15,6 @@ export class TagEntity {
   @Column()
   title: string;
   @ManyToMany(() => ArticleEntity, { cascade: true })
-  @JoinTable()
+  @JoinTable({ name: 'article_tags' })
   articles: ArticleEntity[];
 }

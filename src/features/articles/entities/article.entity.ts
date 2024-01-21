@@ -35,6 +35,6 @@ export class ArticleEntity {
   })
   updatedAt: Date;
   @ManyToMany(() => TagEntity, { cascade: true })
-  @JoinTable()
+  @JoinTable({ name: 'article_tags' })
   tags: TagEntity[];
 }
