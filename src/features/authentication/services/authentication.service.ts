@@ -51,7 +51,9 @@ export class AuthenticationService {
   async register(payload: RegisterDTO) {
     const user = await this.userService.create(payload);
     this.emailQueue.add(ProcessorType.VerificationEmail, user);
-    return user;
+    return {
+      message: 'Email confirmation link has been sent to your email address.',
+    };
   }
 
   logout(user: UserEntity) {
@@ -178,6 +180,9 @@ export class AuthenticationService {
       throw new NotFoundException(
         'User with given email not found in the database.',
       );
+    }
+    if (user.verified) {
+      throw new BadRequestException('User is already verified.');
     }
     this.emailQueue.add(ProcessorType.VerificationEmail, user);
     return {
