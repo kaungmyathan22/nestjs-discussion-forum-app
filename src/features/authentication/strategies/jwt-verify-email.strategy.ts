@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Request } from 'express';
@@ -31,14 +31,22 @@ export class JwtVerifyEmailStrategy extends PassportStrategy(
     });
   }
 
-  async validate(req: Request, payload: JwtPayload) {
+  async validate(req: Request, payload: EmailVerificationJwtPayload) {
     const verificationToken = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
+
+    const user = await this.userService.findByEmail(payload.email);
+    if (!user) {
+      throw new BadRequestException('Invalid email verification token.');
+    }
+    if (user.verified) {
+      throw new BadRequestException('User email is already verified.');
+    }
     const isTokenValid = await this.tokenService.isEmailVerificationTokenValid(
-      payload.id,
+      user.id,
       verificationToken,
     );
     if (isTokenValid) {
-      return await this.userService.findOne(payload.id);
+      return user;
     }
   }
 }
