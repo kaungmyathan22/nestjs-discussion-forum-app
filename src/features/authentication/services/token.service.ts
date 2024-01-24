@@ -102,11 +102,10 @@ export class TokenService {
       expirationTime.getSeconds() + tokenExpirationTimeInSecodns,
     );
 
-    const refreshTokenHash = await bcrypt.hash(verification_token, 10);
     const tokenInstance = await this.emailVerificationTokenRepository.upsert(
       {
         user,
-        token_hash: refreshTokenHash,
+        token_hash: verification_token,
         expiresAt: expirationTime,
       },
       ['user'],
@@ -125,7 +124,8 @@ export class TokenService {
         expiresAt: MoreThanOrEqual(currentTime),
       },
     });
-    return tokenFromDB && tokenFromDB.isTokenMatch(token);
+    const isTokenMatch = token === tokenFromDB.token_hash;
+    return tokenFromDB && isTokenMatch;
   }
 
   async getEmailVerificationToken(user: UserEntity) {
@@ -145,10 +145,9 @@ export class TokenService {
   }
 
   async removeEmailToken(user: UserEntity) {
-    return this.emailVerificationTokenRepository.update(
-      { user: { id: user.id } },
-      { expiresAt: null, token_hash: null },
-    );
+    return await this.emailVerificationTokenRepository.delete({
+      user: { id: user.id },
+    });
   }
   //#endregion
 }

@@ -45,6 +45,10 @@ export class JwtVerifyEmailStrategy extends PassportStrategy(
       user.id,
       verificationToken,
     );
+    if (!isTokenValid) {
+      throw new BadRequestException('Invalid email verification token.');
+    }
+
     if (isTokenValid) {
       return user;
     }
