@@ -6,7 +6,7 @@ import {
 } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { SearchModule } from '../search/search.module';
-import { ArticlesController } from './articles.controller';
+import { ArticlesController } from './controllers/articles.controller';
 import { ArticleEntity } from './entities/article.entity';
 import { TagEntity } from './entities/tags.entity';
 import { customArticleEntityRepositoryMethods } from './repositories/article.repository';

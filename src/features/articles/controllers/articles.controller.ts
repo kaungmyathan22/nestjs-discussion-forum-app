@@ -10,11 +10,11 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { CurrentUser } from 'src/common/decorators/current-user';
-import JwtAuthenticationGuard from '../authentication/guards/jwt.guard';
-import { UserEntity } from '../users/entities/user.entity';
-import { CreateArticleDto } from './dto/create-article.dto';
-import { UpdateArticleDto } from './dto/update-article.dto';
-import { ArticlesService } from './services/articles.service';
+import JwtAuthenticationGuard from '../../authentication/guards/jwt.guard';
+import { UserEntity } from '../../users/entities/user.entity';
+import { CreateArticleDto } from '../dto/create-article.dto';
+import { UpdateArticleDto } from '../dto/update-article.dto';
+import { ArticlesService } from '../services/articles.service';
 
 @Controller('api/v1/articles')
 export class ArticlesController {
