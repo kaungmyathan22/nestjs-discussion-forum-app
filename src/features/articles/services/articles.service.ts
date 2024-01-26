@@ -2,20 +2,18 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PaginatedParamsDto } from 'src/common/dto/pagination.dto';
 import { UserEntity } from 'src/features/users/entities/user.entity';
-import { Repository } from 'typeorm';
 import { CreateArticleDto } from '../dto/create-article.dto';
 import { UpdateArticleDto } from '../dto/update-article.dto';
 import { ArticleEntity } from '../entities/article.entity';
-import { TagEntity } from '../entities/tags.entity';
 import { ArticleEntityRepository } from '../repositories/article.repository';
+import { TagService } from './tags.service';
 
 @Injectable()
 export class ArticlesService {
   constructor(
     @InjectRepository(ArticleEntity)
     private readonly articleRepository: ArticleEntityRepository,
-    @InjectRepository(TagEntity)
-    private readonly tagRepository: Repository<TagEntity>,
+    private readonly tagService: TagService,
   ) {}
   async create(user: UserEntity, payload: CreateArticleDto) {
     const { title, content, tags } = payload;
@@ -25,23 +23,11 @@ export class ArticlesService {
       author: user,
     });
     newArticle = await this.articleRepository.save(newArticle);
-    await Promise.all(
-      tags.map(async (tag) => {
-        let tagEntity = await this.tagRepository.findOne({
-          where: { title: tag },
-          relations: ['articles'],
-        });
-        if (!tagEntity) {
-          tagEntity = await this.tagRepository.save(
-            this.tagRepository.create({ title: tag }),
-          );
-          tagEntity.articles = [];
-        }
-        tagEntity.articles.push(newArticle);
-        this.tagRepository.save(tagEntity);
-        return tagEntity;
-      }),
+    const _tags = await Promise.all(
+      tags.map((tag) => this.tagService.getOrCreate(tag)),
     );
+    newArticle.tags = _tags;
+    await this.articleRepository.save(newArticle);
     return newArticle;
   }
 
@@ -66,20 +52,7 @@ export class ArticlesService {
     await this.articleRepository.update({ id: id }, rest);
     if (tags) {
       const _tags = await Promise.all(
-        tags.map(async (tag) => {
-          let tagEntity = await this.tagRepository.findOne({
-            where: { title: tag },
-            relations: ['articles'],
-          });
-          if (!tagEntity) {
-            tagEntity = await this.tagRepository.save(
-              this.tagRepository.create({ title: tag }),
-            );
-            tagEntity.articles = [];
-          }
-          this.tagRepository.save(tagEntity);
-          return tagEntity;
-        }),
+        tags.map(async (tag) => this.tagService.getOrCreate(tag)),
       );
       article.tags = _tags;
       await this.articleRepository.save(article);
@@ -99,4 +72,6 @@ export class ArticlesService {
     }
     return { message: 'Successfully deleted article.' };
   }
+
+  // async byTags() {}
 }
