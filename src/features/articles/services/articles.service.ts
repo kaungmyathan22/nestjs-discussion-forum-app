@@ -1,21 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PaginatedParamsDto } from 'src/common/dto/pagination.dto';
 import { UserEntity } from 'src/features/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateArticleDto } from '../dto/create-article.dto';
 import { UpdateArticleDto } from '../dto/update-article.dto';
 import { ArticleEntity } from '../entities/article.entity';
 import { TagEntity } from '../entities/tags.entity';
-import { ArticleSearchService } from './article-search.service';
+import { ArticleEntityRepository } from '../repositories/article.repository';
 
 @Injectable()
 export class ArticlesService {
   constructor(
     @InjectRepository(ArticleEntity)
-    private readonly articleRepository: Repository<ArticleEntity>,
+    private readonly articleRepository: ArticleEntityRepository,
     @InjectRepository(TagEntity)
-    private readonly tagRepository: Repository<TagEntity>,
-    private readonly articleSearchService: ArticleSearchService,
+    private readonly tagRepository: Repository<TagEntity>, // private readonly articleSearchService: ArticleSearchService,
   ) {}
   async create(user: UserEntity, payload: CreateArticleDto) {
     const { title, content, tags } = payload;
@@ -45,8 +45,8 @@ export class ArticlesService {
     return newArticle;
   }
 
-  findAll() {
-    return `This action returns all articles`;
+  findAll(queryParams: PaginatedParamsDto) {
+    return this.articleRepository.findAllWithPaginated(queryParams);
   }
 
   findOne(id: number) {
