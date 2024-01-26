@@ -44,8 +44,9 @@ export class ArticlesController {
     return this.articlesService.update(+id, updateArticleDto);
   }
 
+  @UseGuards(JwtAuthenticationGuard)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.articlesService.remove(+id);
+  remove(@Param('id') id: string, @CurrentUser() user: UserEntity) {
+    return this.articlesService.remove(+id, user);
   }
 }

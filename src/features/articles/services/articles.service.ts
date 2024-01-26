@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PaginatedParamsDto } from 'src/common/dto/pagination.dto';
 import { UserEntity } from 'src/features/users/entities/user.entity';
@@ -49,15 +49,29 @@ export class ArticlesService {
     return this.articleRepository.findAllWithPaginated(queryParams);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} article`;
+  async findOne(id: number) {
+    const article = await this.articleRepository.findOne({
+      where: { id },
+      relations: ['tags', 'author'],
+    });
+    if (!article) {
+      throw new NotFoundException('Aricle not found with given id.');
+    }
+    return article;
   }
 
   update(id: number, updateArticleDto: UpdateArticleDto) {
     return `This action updates a #${id} article`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} article`;
+  async remove(id: number, user: UserEntity) {
+    const result = await this.articleRepository.delete({
+      id,
+      author: { id: user.id },
+    });
+    if (result.affected < 1) {
+      throw new NotFoundException('Article with given id not found.');
+    }
+    return { message: 'Successfully deleted article.' };
   }
 }
