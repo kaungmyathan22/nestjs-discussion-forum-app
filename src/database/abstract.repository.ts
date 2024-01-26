@@ -1,5 +1,5 @@
 import { PaginatedParamsDto } from 'src/common/dto/pagination.dto';
-import { FindOptionsWhere, Repository } from 'typeorm';
+import { FindOptionsOrder, FindOptionsWhere, Repository } from 'typeorm';
 
 export class AbstractRepository {
   static async findAllWithPaginated<T>(
@@ -7,12 +7,19 @@ export class AbstractRepository {
     queryParams: PaginatedParamsDto = {},
     filterQuery: FindOptionsWhere<T> = {},
     relations: string[] = [],
+    order?: FindOptionsOrder<T>,
   ) {
     const { page = 1, pageSize = 10 } = queryParams as PaginatedParamsDto;
     const skip = (page - 1) * pageSize;
     const [totalItems, documents] = await Promise.all([
       that.count({ where: filterQuery }),
-      that.find({ where: filterQuery, skip, take: pageSize, relations }),
+      that.find({
+        where: filterQuery,
+        skip,
+        take: pageSize,
+        relations,
+        order,
+      }),
     ]);
     const totalPages = Math.ceil(totalItems / pageSize);
     return {

@@ -30,6 +30,7 @@ export const customArticleEntityRepositoryMethods: Pick<
       queryParams,
       filterQuery,
       ['tags', 'author'],
+      { createdAt: 'DESC' },
     );
   },
 };
