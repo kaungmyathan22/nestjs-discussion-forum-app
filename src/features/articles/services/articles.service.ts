@@ -60,8 +60,33 @@ export class ArticlesService {
     return article;
   }
 
-  update(id: number, updateArticleDto: UpdateArticleDto) {
-    return `This action updates a #${id} article`;
+  async update(id: number, payload: UpdateArticleDto) {
+    const { tags, ...rest } = payload;
+    const article = await this.findOne(id);
+    await this.articleRepository.update({ id: id }, rest);
+    if (tags) {
+      const _tags = await Promise.all(
+        tags.map(async (tag) => {
+          let tagEntity = await this.tagRepository.findOne({
+            where: { title: tag },
+            relations: ['articles'],
+          });
+          if (!tagEntity) {
+            tagEntity = await this.tagRepository.save(
+              this.tagRepository.create({ title: tag }),
+            );
+            tagEntity.articles = [];
+          }
+          this.tagRepository.save(tagEntity);
+          return tagEntity;
+        }),
+      );
+      article.tags = _tags;
+      await this.articleRepository.save(article);
+    }
+    return {
+      message: 'Successfully updated the article.',
+    };
   }
 
   async remove(id: number, user: UserEntity) {
