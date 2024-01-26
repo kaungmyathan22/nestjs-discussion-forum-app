@@ -29,6 +29,7 @@ export const customArticleEntityRepositoryMethods: Pick<
       this,
       queryParams,
       filterQuery,
+      ['tags', 'author'],
     );
   },
 };
