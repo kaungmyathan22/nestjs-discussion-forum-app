@@ -6,12 +6,13 @@ export class AbstractRepository {
     that: Repository<T>,
     queryParams: PaginatedParamsDto = {},
     filterQuery: FindOptionsWhere<T> = {},
+    relations: string[] = [],
   ) {
     const { page = 1, pageSize = 10 } = queryParams as PaginatedParamsDto;
     const skip = (page - 1) * pageSize;
     const [totalItems, documents] = await Promise.all([
       that.count({ where: filterQuery }),
-      that.find({ where: filterQuery, skip, take: pageSize }),
+      that.find({ where: filterQuery, skip, take: pageSize, relations }),
     ]);
     const totalPages = Math.ceil(totalItems / pageSize);
     return {
