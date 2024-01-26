@@ -73,5 +73,9 @@ export class ArticlesService {
     return { message: 'Successfully deleted article.' };
   }
 
-  // async byTags() {}
+  async byTag(params: PaginatedParamsDto, tagId: number) {
+    return await this.articleRepository.findAllWithPaginated(params, {
+      tags: [{ id: tagId }],
+    });
+  }
 }

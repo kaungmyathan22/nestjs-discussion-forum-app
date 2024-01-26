@@ -29,6 +29,11 @@ export class ArticlesController {
     return this.articlesService.create(user, createArticleDto);
   }
 
+  @Get('/tags/:tagId')
+  findArticlesByTags(@Query() queryParams, @Param('tagId') tagId: number) {
+    return this.articlesService.byTag(queryParams, tagId);
+  }
+
   @Get()
   findAll(@Query() queryParams) {
     return this.articlesService.findAll(queryParams);
