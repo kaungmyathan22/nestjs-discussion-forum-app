@@ -11,7 +11,6 @@ import { ArticleEntity } from './article.entity';
 export class TagEntity {
   @PrimaryGeneratedColumn()
   id: number;
-
   @Column()
   title: string;
   @ManyToMany(() => ArticleEntity, { cascade: true })
