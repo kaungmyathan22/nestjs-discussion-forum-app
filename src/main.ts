@@ -10,8 +10,8 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       // transform: true,
-      // forbidUnknownValues: true,
-      // whitelist: true,
+      forbidUnknownValues: true,
+      whitelist: true,
     }),
   );
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
