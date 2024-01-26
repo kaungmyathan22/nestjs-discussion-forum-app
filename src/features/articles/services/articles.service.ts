@@ -15,7 +15,7 @@ export class ArticlesService {
     @InjectRepository(ArticleEntity)
     private readonly articleRepository: ArticleEntityRepository,
     @InjectRepository(TagEntity)
-    private readonly tagRepository: Repository<TagEntity>, // private readonly articleSearchService: ArticleSearchService,
+    private readonly tagRepository: Repository<TagEntity>,
   ) {}
   async create(user: UserEntity, payload: CreateArticleDto) {
     const { title, content, tags } = payload;
