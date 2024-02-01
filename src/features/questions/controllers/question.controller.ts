@@ -13,13 +13,13 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CurrentUser } from 'src/common/decorators/current-user';
+import { PaginatedArticleResponseDto } from 'src/common/dto/response/paginated-response.dto';
 import JwtAuthenticationGuard from 'src/features/authentication/guards/jwt.guard';
 import { UserEntity } from 'src/features/users/entities/user.entity';
 import { CreateQuestionDto } from '../dto/create-question.dto';
 import { CreateQuestionResponseDTO as QuestionResponseDTO } from '../dto/question-response.dto';
 import { UpdateQuestionDto } from '../dto/update-question.dto';
 import { QuestionService } from '../services/question.service';
-import { PaginatedArticleResponseDto } from 'src/common/dto/response/paginated-response.dto';
 
 @ApiTags('Questions')
 @Controller('api/v1/questions')
@@ -71,12 +71,20 @@ export class QuestionController {
     return this.questionService.findOne(+id);
   }
 
+  @ApiResponse({ status: 404, description: 'Question not found with given id' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully updated question by given id.',
+    type: QuestionResponseDTO,
+  })
+  @UseGuards(JwtAuthenticationGuard)
   @Patch(':id')
   update(
     @Param('id') id: string,
     @Body() updateQuestionDto: UpdateQuestionDto,
+    @CurrentUser() user: UserEntity,
   ) {
-    return this.questionService.update(+id, updateQuestionDto);
+    return this.questionService.update(+id, updateQuestionDto, user);
   }
 
   @ApiOperation({ summary: 'Delete a question by id' })
