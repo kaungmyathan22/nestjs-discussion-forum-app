@@ -1,5 +1,13 @@
+import { TagEntity } from 'src/features/articles/entities/tags.entity';
 import { UserEntity } from 'src/features/users/entities/user.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class QuestionEntity {
@@ -14,4 +22,8 @@ export class QuestionEntity {
 
   @ManyToOne(() => UserEntity, (user) => user.questions) // Many questions to one user
   author: UserEntity;
+
+  @ManyToMany(() => TagEntity, { cascade: true })
+  @JoinTable({ name: 'question_tags' })
+  tags: TagEntity[];
 }

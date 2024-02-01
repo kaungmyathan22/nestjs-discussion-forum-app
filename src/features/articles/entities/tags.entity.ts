@@ -1,3 +1,4 @@
+import { QuestionEntity } from 'src/features/questions/entities/question.entity';
 import {
   Column,
   Entity,
@@ -16,4 +17,8 @@ export class TagEntity {
   @ManyToMany(() => ArticleEntity, { cascade: true })
   @JoinTable({ name: 'article_tags' })
   articles: ArticleEntity[];
+
+  @ManyToMany(() => QuestionEntity, { cascade: true })
+  @JoinTable({ name: 'question_tags' })
+  questions: QuestionEntity[];
 }
