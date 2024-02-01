@@ -6,12 +6,14 @@ import {
   Patch,
   UseGuards,
 } from '@nestjs/common';
-import JwtAuthenticationGuard from 'src/features/authentication/guards/jwt.guard';
+import { ApiTags } from '@nestjs/swagger';
 import { CurrentUser } from 'src/common/decorators/current-user';
+import JwtAuthenticationGuard from 'src/features/authentication/guards/jwt.guard';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserEntity } from './entities/user.entity';
 import { UsersService } from './users.service';
 
+@ApiTags('Users')
 @Controller('api/v1/users')
 @UseGuards(JwtAuthenticationGuard)
 export class UsersController {

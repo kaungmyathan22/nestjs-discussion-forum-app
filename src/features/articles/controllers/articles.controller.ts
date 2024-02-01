@@ -9,6 +9,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { CurrentUser } from 'src/common/decorators/current-user';
 import JwtAuthenticationGuard from '../../authentication/guards/jwt.guard';
 import { UserEntity } from '../../users/entities/user.entity';
@@ -16,6 +17,7 @@ import { CreateArticleDto } from '../dto/create-article.dto';
 import { UpdateArticleDto } from '../dto/update-article.dto';
 import { ArticlesService } from '../services/articles.service';
 
+@ApiTags('Articles')
 @Controller('api/v1/articles')
 export class ArticlesController {
   constructor(private readonly articlesService: ArticlesService) {}
