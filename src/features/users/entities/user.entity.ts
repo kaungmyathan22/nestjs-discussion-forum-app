@@ -1,10 +1,12 @@
 import * as bcrypt from 'bcryptjs';
 import { Exclude } from 'class-transformer';
+import { Question } from 'src/features/questions/entities/question.entity';
 import {
   BeforeInsert,
   BeforeUpdate,
   Column,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -26,6 +28,9 @@ export class UserEntity {
   @Column()
   @Exclude()
   password: string;
+
+  @OneToMany(() => Question, (question) => question.author) // One user to many questions
+  questions: Question[];
 
   @BeforeInsert()
   @BeforeUpdate()
