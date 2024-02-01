@@ -10,10 +10,13 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { CurrentUser } from 'src/common/decorators/current-user';
 import JwtAuthenticationGuard from 'src/features/authentication/guards/jwt.guard';
+import { UserEntity } from 'src/features/users/entities/user.entity';
 import { CreateQuestionDto } from '../dto/create-question.dto';
 import { UpdateQuestionDto } from '../dto/update-question.dto';
 import { QuestionService } from '../services/question.service';
+import { CreateQuestionResponseDTO } from '../dto/question-response.dto';
 
 @ApiTags('Questions')
 @Controller('api/v1/questions')
@@ -24,7 +27,7 @@ export class QuestionController {
   @ApiResponse({
     status: 201,
     description: 'Question has been successfully created.',
-    type: String,
+    type: CreateQuestionResponseDTO,
   })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 500, description: 'Internal Server Error' })
@@ -35,8 +38,11 @@ export class QuestionController {
   @HttpCode(201)
   @UseGuards(JwtAuthenticationGuard)
   @Post()
-  create(@Body() createQuestionDto: CreateQuestionDto) {
-    return this.questionService.create(createQuestionDto);
+  create(
+    @Body() createQuestionDto: CreateQuestionDto,
+    @CurrentUser() user: UserEntity,
+  ) {
+    return this.questionService.create(createQuestionDto, user);
   }
 
   @Get()
