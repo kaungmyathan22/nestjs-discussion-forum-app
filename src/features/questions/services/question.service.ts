@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TagService } from 'src/features/articles/services/tags.service';
 import { UserEntity } from 'src/features/users/entities/user.entity';
@@ -34,15 +34,29 @@ export class QuestionService {
     return `This action returns all question`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} question`;
+  async findOne(id: number) {
+    const question = await this.questionRepository.findOne({
+      where: { id },
+      relations: ['tags', 'author'],
+    });
+    if (!question) {
+      throw new NotFoundException('Question not found with given id.');
+    }
+    return question;
   }
 
   update(id: number, updateQuestionDto: UpdateQuestionDto) {
     return `This action updates a #${id} question`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} question`;
+  async remove(id: number, user: UserEntity) {
+    const result = await this.questionRepository.delete({
+      id,
+      author: { id: user.id },
+    });
+    if (result.affected < 1) {
+      throw new NotFoundException('Question with given id not found.');
+    }
+    return { message: 'Successfully deleted question.' };
   }
 }
