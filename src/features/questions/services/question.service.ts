@@ -6,6 +6,7 @@ import { CreateQuestionDto } from '../dto/create-question.dto';
 import { UpdateQuestionDto } from '../dto/update-question.dto';
 import { QuestionEntity } from '../entities/question.entity';
 import { QuestionEntityRepository } from '../repositories/question.repository';
+import { PaginatedParamsDto } from 'src/common/dto/pagination.dto';
 
 @Injectable()
 export class QuestionService {
@@ -30,8 +31,8 @@ export class QuestionService {
     return newQuestion;
   }
 
-  findAll() {
-    return `This action returns all question`;
+  findAll(queryParams: PaginatedParamsDto) {
+    return this.questionRepository.findAllWithPaginated(queryParams);
   }
 
   async findOne(id: number) {

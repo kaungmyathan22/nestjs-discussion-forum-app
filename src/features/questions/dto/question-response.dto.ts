@@ -3,10 +3,10 @@ import { TagResponseDto } from 'src/features/articles/dto/response/tags-response
 import { UserResponseDto } from 'src/features/users/dto/response/user-response.dto';
 
 export class CreateQuestionResponseDTO {
-  @ApiProperty()
+  @ApiProperty({ example: 1 })
   id: number;
 
-  @ApiProperty()
+  @ApiProperty({})
   title: string;
 
   @ApiProperty()

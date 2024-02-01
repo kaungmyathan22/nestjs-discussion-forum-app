@@ -8,6 +8,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -15,9 +16,10 @@ import { CurrentUser } from 'src/common/decorators/current-user';
 import JwtAuthenticationGuard from 'src/features/authentication/guards/jwt.guard';
 import { UserEntity } from 'src/features/users/entities/user.entity';
 import { CreateQuestionDto } from '../dto/create-question.dto';
-import { CreateQuestionResponseDTO } from '../dto/question-response.dto';
+import { CreateQuestionResponseDTO as QuestionResponseDTO } from '../dto/question-response.dto';
 import { UpdateQuestionDto } from '../dto/update-question.dto';
 import { QuestionService } from '../services/question.service';
+import { PaginatedArticleResponseDto } from 'src/common/dto/response/paginated-response.dto';
 
 @ApiTags('Questions')
 @Controller('api/v1/questions')
@@ -28,7 +30,7 @@ export class QuestionController {
   @ApiResponse({
     status: 201,
     description: 'Question has been successfully created.',
-    type: CreateQuestionResponseDTO,
+    type: QuestionResponseDTO,
   })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 500, description: 'Internal Server Error' })
@@ -46,16 +48,22 @@ export class QuestionController {
     return this.questionService.create(createQuestionDto, user);
   }
 
+  @ApiOperation({ summary: 'Get a list of paginated questions.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully retrieve questions',
+    type: PaginatedArticleResponseDto<QuestionResponseDTO>,
+  })
   @Get()
-  findAll() {
-    return this.questionService.findAll();
+  findAll(@Query() queryParams) {
+    return this.questionService.findAll(queryParams);
   }
 
   @ApiOperation({ summary: 'Get a question' })
   @ApiResponse({
     status: 200,
     description: 'Successfully get a question by given id.',
-    type: CreateQuestionResponseDTO,
+    type: QuestionResponseDTO,
   })
   @ApiResponse({ status: 404, description: 'Question not found with given id' })
   @Get(':id')

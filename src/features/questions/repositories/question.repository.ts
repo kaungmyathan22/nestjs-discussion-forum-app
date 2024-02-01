@@ -28,6 +28,7 @@ export const customQuestionEntityRepositoryMethods: Pick<
       this,
       queryParams,
       filterQuery,
+      ['tags', 'author'],
     );
   },
 };
