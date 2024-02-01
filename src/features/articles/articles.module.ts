@@ -31,5 +31,6 @@ import { TagService } from './services/tags.service';
       },
     },
   ],
+  exports: [TagService],
 })
 export class ArticlesModule {}
