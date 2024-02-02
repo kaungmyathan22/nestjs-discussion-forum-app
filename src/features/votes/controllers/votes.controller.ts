@@ -1,7 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { VotesService } from './votes.service';
-import { CreateVoteDto } from './dto/create-vote.dto';
-import { UpdateVoteDto } from './dto/update-vote.dto';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
+import { CreateVoteDto } from '../dto/create-vote.dto';
+import { UpdateVoteDto } from '../dto/update-vote.dto';
+import { VotesService } from '../services/votes.service';
 
 @Controller('votes')
 export class VotesController {
