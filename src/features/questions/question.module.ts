@@ -5,6 +5,7 @@ import {
   getRepositoryToken,
 } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
+import { AnswersModule } from '../answers/answers.module';
 import { ArticlesModule } from '../articles/articles.module';
 import { UsersModule } from '../users/users.module';
 import { QuestionController } from './controllers/question.controller';
@@ -17,6 +18,7 @@ import { QuestionService } from './services/question.service';
     TypeOrmModule.forFeature([QuestionEntity]),
     ArticlesModule,
     UsersModule,
+    AnswersModule,
   ],
   controllers: [QuestionController],
   providers: [

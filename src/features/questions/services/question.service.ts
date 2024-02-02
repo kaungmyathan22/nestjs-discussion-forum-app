@@ -5,6 +5,8 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PaginatedParamsDto } from 'src/common/dto/pagination.dto';
+import { CreateAnswerDto } from 'src/features/answers/dto/create-answer.dto';
+import { AnswersService } from 'src/features/answers/services/answers.service';
 import { TagService } from 'src/features/articles/services/tags.service';
 import { UserEntity } from 'src/features/users/entities/user.entity';
 import { UsersService } from 'src/features/users/users.service';
@@ -21,6 +23,7 @@ export class QuestionService {
     private readonly questionRepository: QuestionEntityRepository,
     private readonly tagService: TagService,
     private readonly userService: UsersService,
+    private readonly answersService: AnswersService,
   ) {}
   async create(payload: CreateQuestionDto, user: UserEntity) {
     const { title, content, tags } = payload;
@@ -110,5 +113,14 @@ export class QuestionService {
       this.userService.findOneOrFail({ id: userId }),
     ]);
     return result;
+  }
+
+  async answerAQuestion(
+    id: number,
+    payload: CreateAnswerDto,
+    user: UserEntity,
+  ) {
+    const question = await this.findOneOrFail({ id });
+    return this.answersService.create(question, payload, user);
   }
 }

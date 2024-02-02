@@ -14,6 +14,8 @@ import {
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CurrentUser } from 'src/common/decorators/current-user';
 import { PaginatedArticleResponseDto } from 'src/common/dto/response/paginated-response.dto';
+import { CreateAnswerDto } from 'src/features/answers/dto/create-answer.dto';
+import { AnswerResponseDTO } from 'src/features/answers/dto/response/answer-response.dto';
 import JwtAuthenticationGuard from 'src/features/authentication/guards/jwt.guard';
 import { UserEntity } from 'src/features/users/entities/user.entity';
 import { CreateQuestionDto } from '../dto/create-question.dto';
@@ -132,5 +134,25 @@ export class QuestionController {
   @Get('/user/:userID')
   questionByUser(@Param('userID') userID: string, @Query() queryParams) {
     return this.questionService.byUser(queryParams, +userID);
+  }
+
+  @ApiOperation({ summary: 'Answer a specific question' })
+  @ApiResponse({
+    status: 401,
+    description: 'Need to login to answer a question.',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Answer has been successfully created.',
+    type: AnswerResponseDTO,
+  })
+  @UseGuards(JwtAuthenticationGuard)
+  @Post('/:id/answer')
+  answerAQuestion(
+    @Param('id') id: number,
+    @Body() payload: CreateAnswerDto,
+    @CurrentUser() user: UserEntity,
+  ) {
+    return this.questionService.answerAQuestion(id, payload, user);
   }
 }
