@@ -6,13 +6,18 @@ import {
 } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { ArticlesModule } from '../articles/articles.module';
+import { UsersModule } from '../users/users.module';
 import { QuestionController } from './controllers/question.controller';
 import { QuestionEntity } from './entities/question.entity';
 import { customQuestionEntityRepositoryMethods } from './repositories/question.repository';
 import { QuestionService } from './services/question.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([QuestionEntity]), ArticlesModule],
+  imports: [
+    TypeOrmModule.forFeature([QuestionEntity]),
+    ArticlesModule,
+    UsersModule,
+  ],
   controllers: [QuestionController],
   providers: [
     QuestionService,
