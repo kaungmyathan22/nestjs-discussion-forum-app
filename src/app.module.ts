@@ -15,6 +15,7 @@ import { QuestionModule } from './features/questions/question.module';
 import { SearchModule } from './features/search/search.module';
 import { VotesModule } from './features/votes/votes.module';
 import { QueueModule } from './queue/queue.module';
+import { AnswersModule } from './features/answers/answers.module';
 
 @Module({
   imports: [
@@ -63,6 +64,7 @@ import { QueueModule } from './queue/queue.module';
     SearchModule,
     ArticlesModule,
     VotesModule,
+    AnswersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
