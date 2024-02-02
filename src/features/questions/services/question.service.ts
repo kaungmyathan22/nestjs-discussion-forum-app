@@ -7,6 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { PaginatedParamsDto } from 'src/common/dto/pagination.dto';
 import { TagService } from 'src/features/articles/services/tags.service';
 import { UserEntity } from 'src/features/users/entities/user.entity';
+import { UsersService } from 'src/features/users/users.service';
 import { FindOptionsWhere } from 'typeorm';
 import { CreateQuestionDto } from '../dto/create-question.dto';
 import { UpdateQuestionDto } from '../dto/update-question.dto';
@@ -19,6 +20,7 @@ export class QuestionService {
     @InjectRepository(QuestionEntity)
     private readonly questionRepository: QuestionEntityRepository,
     private readonly tagService: TagService,
+    private readonly userService: UsersService,
   ) {}
   async create(payload: CreateQuestionDto, user: UserEntity) {
     const { title, content, tags } = payload;
@@ -86,5 +88,27 @@ export class QuestionService {
       throw new NotFoundException('Question with given id not found.');
     }
     return { message: 'Successfully deleted question.' };
+  }
+
+  async byTag(params: PaginatedParamsDto, tagId: number) {
+    const [result] = await Promise.all([
+      this.questionRepository.findAllWithPaginated(params, {
+        tags: [{ id: tagId }],
+      }),
+      this.tagService.findOneOrFail({ id: tagId }),
+    ]);
+    return result;
+  }
+
+  async byUser(params: PaginatedParamsDto, userId: number) {
+    const [result] = await Promise.all([
+      this.questionRepository.findAllWithPaginated(params, {
+        author: {
+          id: userId,
+        },
+      }),
+      this.userService.findOneOrFail({ id: userId }),
+    ]);
+    return result;
   }
 }
