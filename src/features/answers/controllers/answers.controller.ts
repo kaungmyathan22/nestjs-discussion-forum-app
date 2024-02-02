@@ -1,24 +1,12 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
-import { CreateAnswerDto } from '../dto/create-answer.dto';
+import { Body, Controller, Delete, Get, Param, Patch } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { UpdateAnswerDto } from '../dto/update-answer.dto';
 import { AnswersService } from '../services/answers.service';
 
-@Controller('answers')
+@ApiTags('Answer')
+@Controller('api/v1/answers')
 export class AnswersController {
   constructor(private readonly answersService: AnswersService) {}
-
-  @Post()
-  create(@Body() createAnswerDto: CreateAnswerDto) {
-    return this.answersService.create(createAnswerDto);
-  }
 
   @Get()
   findAll() {
