@@ -103,4 +103,34 @@ export class QuestionController {
   remove(@Param('id') id: string, @CurrentUser() user: UserEntity) {
     return this.questionService.remove(+id, user);
   }
+
+  @ApiOperation({ summary: 'Get questions by tag.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully get questions by given tag.',
+    type: PaginatedArticleResponseDto<QuestionResponseDTO>,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Tag with given id not found.',
+  })
+  @Get('/tag/:tagId')
+  questionByTag(@Param('tagId') tagId: string, @Query() queryParams) {
+    return this.questionService.byTag(queryParams, +tagId);
+  }
+
+  @ApiOperation({ summary: 'Get questions by user.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully get questions by given user.',
+    type: PaginatedArticleResponseDto<QuestionResponseDTO>,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'User with given id not found.',
+  })
+  @Get('/user/:userID')
+  questionByUser(@Param('userID') userID: string, @Query() queryParams) {
+    return this.questionService.byUser(queryParams, +userID);
+  }
 }
