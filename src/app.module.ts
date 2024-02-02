@@ -13,8 +13,8 @@ import { AuthenticationModule } from './features/authentication/authentication.m
 import { EmailModule } from './features/email/email.module';
 import { QuestionModule } from './features/questions/question.module';
 import { SearchModule } from './features/search/search.module';
+import { VotesModule } from './features/votes/votes.module';
 import { QueueModule } from './queue/queue.module';
-import { VotesModule } from './votes/votes.module';
 
 @Module({
   imports: [
