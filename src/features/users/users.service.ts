@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EmailService } from 'src/features/email/email.service';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { AuthenticateDTO } from './dto/authenticate.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -38,6 +38,14 @@ export class UsersService {
 
   async findByEmail(email: string): Promise<UserEntity | undefined> {
     return await this.userRepository.findOne({ where: { email } });
+  }
+
+  async findOneOrFail(where: FindOptionsWhere<UserEntity>) {
+    const user = await this.userRepository.findOne({ where });
+    if (!user) {
+      throw new HttpException(`User not found.`, HttpStatus.NOT_FOUND);
+    }
+    return user;
   }
 
   async findOne(id: number) {
