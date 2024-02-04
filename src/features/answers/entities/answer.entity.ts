@@ -1,6 +1,12 @@
 import { QuestionEntity } from 'src/features/questions/entities/question.entity';
 import { UserEntity } from 'src/features/users/entities/user.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class AnswerEntity {
@@ -12,4 +18,6 @@ export class AnswerEntity {
   author: UserEntity;
   @ManyToOne(() => QuestionEntity)
   question: QuestionEntity;
+  @CreateDateColumn({ default: new Date(), type: 'timestamp with time zone' })
+  createdAt: Date;
 }
