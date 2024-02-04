@@ -2,6 +2,18 @@ import { PaginatedParamsDto } from 'src/common/dto/pagination.dto';
 import { FindOptionsOrder, FindOptionsWhere, Repository } from 'typeorm';
 
 export class AbstractRepository {
+  static async findOneOrFail<T>(
+    that: Repository<T>,
+    where: FindOptionsWhere<T> = {},
+    relations: string[] = [],
+    errorMessage = '',
+  ) {
+    const resource = await that.findOne({ where, relations });
+    if (!resource) {
+      throw new Error(errorMessage);
+    }
+    return resource;
+  }
   static async findAllWithPaginated<T>(
     that: Repository<T>,
     queryParams: PaginatedParamsDto = {},
