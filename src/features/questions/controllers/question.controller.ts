@@ -155,4 +155,8 @@ export class QuestionController {
   ) {
     return this.questionService.answerAQuestion(id, payload, user);
   }
+  @Get('/:id/answers')
+  answersByQuestion(@Param('id') id: number, @Query() query) {
+    return this.questionService.answersByQuestion(query, id);
+  }
 }

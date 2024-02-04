@@ -123,4 +123,9 @@ export class QuestionService {
     const question = await this.findOneOrFail({ id });
     return this.answersService.create(question, payload, user);
   }
+
+  async answersByQuestion(queryParams: PaginatedParamsDto, id: number) {
+    const question = await this.findOneOrFail({ id });
+    return this.answersService.answersByQuestion(queryParams, question);
+  }
 }
