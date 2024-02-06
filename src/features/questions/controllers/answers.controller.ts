@@ -10,7 +10,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { CurrentUser } from 'src/common/decorators/current-user';
 import JwtAuthenticationGuard from 'src/features/authentication/guards/jwt.guard';
 import { UserEntity } from 'src/features/users/entities/user.entity';
-import { UpdateAnswerDto } from '../dto/update-answer.dto';
+import { UpdateAnswerDto } from '../dto/answer/update-answer.dto';
 import { AnswersService } from '../services/answers.service';
 
 @ApiTags('Answer')

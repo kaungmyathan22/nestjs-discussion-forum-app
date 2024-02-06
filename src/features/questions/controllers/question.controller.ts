@@ -14,9 +14,9 @@ import {
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CurrentUser } from 'src/common/decorators/current-user';
 import { PaginatedArticleResponseDto } from 'src/common/dto/response/paginated-response.dto';
-import { CreateAnswerDto } from 'src/features/answers/dto/create-answer.dto';
-import { AnswerResponseDTO } from 'src/features/answers/dto/response/answer-response.dto';
 import JwtAuthenticationGuard from 'src/features/authentication/guards/jwt.guard';
+import { CreateAnswerDto } from 'src/features/questions/dto/answer/create-answer.dto';
+import { AnswerResponseDTO } from 'src/features/questions/dto/answer/response/answer-response.dto';
 import { UserEntity } from 'src/features/users/entities/user.entity';
 import { CreateQuestionDto } from '../dto/create-question.dto';
 import { CreateQuestionResponseDTO as QuestionResponseDTO } from '../dto/question-response.dto';

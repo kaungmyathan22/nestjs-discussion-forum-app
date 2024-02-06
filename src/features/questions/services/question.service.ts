@@ -5,9 +5,9 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PaginatedParamsDto } from 'src/common/dto/pagination.dto';
-import { CreateAnswerDto } from 'src/features/answers/dto/create-answer.dto';
-import { AnswersService } from 'src/features/answers/services/answers.service';
 import { TagService } from 'src/features/articles/services/tags.service';
+import { CreateAnswerDto } from 'src/features/questions/dto/answer/create-answer.dto';
+import { AnswersService } from 'src/features/questions/services/answers.service';
 import { UserEntity } from 'src/features/users/entities/user.entity';
 import { UsersService } from 'src/features/users/users.service';
 import { FindOptionsWhere } from 'typeorm';

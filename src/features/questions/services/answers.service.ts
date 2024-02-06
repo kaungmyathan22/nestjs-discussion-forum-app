@@ -3,8 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { PaginatedParamsDto } from 'src/common/dto/pagination.dto';
 import { QuestionEntity } from 'src/features/questions/entities/question.entity';
 import { UserEntity } from 'src/features/users/entities/user.entity';
-import { CreateAnswerDto } from '../dto/create-answer.dto';
-import { UpdateAnswerDto } from '../dto/update-answer.dto';
+import { CreateAnswerDto } from '../dto/answer/create-answer.dto';
+import { UpdateAnswerDto } from '../dto/answer/update-answer.dto';
 import { AnswerEntity } from '../entities/answer.entity';
 import { AnswerRepository } from '../repositories/answer.repository';
 
