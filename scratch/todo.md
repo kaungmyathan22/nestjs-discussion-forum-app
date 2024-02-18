@@ -1,0 +1,6 @@
+- [ ] vote question
+- [ ] vote answer
+- [ ] vote count for question
+- [ ] vote count for answer
+- [ ] get votes for question
+- [ ] get votes for answer
